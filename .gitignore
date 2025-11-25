@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+# Data cache
+bundesliga_matches.json
+bundesliga_odds.json
+bundesliga_historical_odds.csv

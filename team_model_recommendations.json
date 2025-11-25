@@ -1,0 +1,449 @@
+{
+  "generated_at": "2025-11-25T11:51:18.278307",
+  "description": "Team-specific model recommendations based on season backtest",
+  "model_legend": {
+    "model1": "Multi-Output Regression",
+    "model2": "Multi-Class Classification",
+    "model3": "Poisson Regression",
+    "model4": "Naive Odds-based"
+  },
+  "ensemble_stats": {
+    "total_points": 150,
+    "matches": 99,
+    "avg_points": 1.5151515151515151
+  },
+  "teams": {
+    "FC Bayern M\u00fcnchen": {
+      "best_model": "model2",
+      "best_model_name": "Multi-Class Classification",
+      "best_avg_points": 2.09,
+      "second_best_model": "model3",
+      "second_best_name": "Poisson Regression",
+      "second_avg_points": 2.0,
+      "confidence": "low",
+      "confidence_gap": 0.09,
+      "recommendation": "Slight preference for Multi-Class Classification - but Poisson Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 20,
+        "model2": 23,
+        "model3": 22,
+        "model4": 19
+      },
+      "avg_points": {
+        "model1": 1.82,
+        "model2": 2.09,
+        "model3": 2.0,
+        "model4": 1.73
+      }
+    },
+    "Eintracht Frankfurt": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 1.55,
+      "second_best_model": "model3",
+      "second_best_name": "Poisson Regression",
+      "second_avg_points": 1.27,
+      "confidence": "medium",
+      "confidence_gap": 0.27,
+      "recommendation": "Recommend Multi-Output Regression - moderately better than alternatives",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 17,
+        "model2": 7,
+        "model3": 14,
+        "model4": 7
+      },
+      "avg_points": {
+        "model1": 1.55,
+        "model2": 0.64,
+        "model3": 1.27,
+        "model4": 0.64
+      }
+    },
+    "Hamburger SV": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 1.64,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.45,
+      "confidence": "low",
+      "confidence_gap": 0.18,
+      "recommendation": "Slight preference for Naive Odds-based - but Multi-Output Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 16,
+        "model2": 9,
+        "model3": 13,
+        "model4": 18
+      },
+      "avg_points": {
+        "model1": 1.45,
+        "model2": 0.82,
+        "model3": 1.18,
+        "model4": 1.64
+      }
+    },
+    "1. FC Heidenheim 1846": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 2.27,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.09,
+      "confidence": "high",
+      "confidence_gap": 1.18,
+      "recommendation": "Strongly recommend Naive Odds-based - significantly outperforms others",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 12,
+        "model2": 7,
+        "model3": 10,
+        "model4": 25
+      },
+      "avg_points": {
+        "model1": 1.09,
+        "model2": 0.64,
+        "model3": 0.91,
+        "model4": 2.27
+      }
+    },
+    "RB Leipzig": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 2.18,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.64,
+      "confidence": "high",
+      "confidence_gap": 0.55,
+      "recommendation": "Strongly recommend Naive Odds-based - significantly outperforms others",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 18,
+        "model2": 12,
+        "model3": 14,
+        "model4": 24
+      },
+      "avg_points": {
+        "model1": 1.64,
+        "model2": 1.09,
+        "model3": 1.27,
+        "model4": 2.18
+      }
+    },
+    "FC St. Pauli 1910": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 1.55,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 0.73,
+      "confidence": "high",
+      "confidence_gap": 0.82,
+      "recommendation": "Strongly recommend Naive Odds-based - significantly outperforms others",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 8,
+        "model2": 3,
+        "model3": 2,
+        "model4": 17
+      },
+      "avg_points": {
+        "model1": 0.73,
+        "model2": 0.27,
+        "model3": 0.18,
+        "model4": 1.55
+      }
+    },
+    "1. FC K\u00f6ln": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 1.45,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 1.18,
+      "confidence": "medium",
+      "confidence_gap": 0.27,
+      "recommendation": "Recommend Multi-Output Regression - moderately better than alternatives",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 16,
+        "model2": 10,
+        "model3": 11,
+        "model4": 13
+      },
+      "avg_points": {
+        "model1": 1.45,
+        "model2": 0.91,
+        "model3": 1.0,
+        "model4": 1.18
+      }
+    },
+    "SV Werder Bremen": {
+      "best_model": "model2",
+      "best_model_name": "Multi-Class Classification",
+      "best_avg_points": 1.45,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.27,
+      "confidence": "low",
+      "confidence_gap": 0.18,
+      "recommendation": "Slight preference for Multi-Class Classification - but Multi-Output Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 14,
+        "model2": 16,
+        "model3": 10,
+        "model4": 14
+      },
+      "avg_points": {
+        "model1": 1.27,
+        "model2": 1.45,
+        "model3": 0.91,
+        "model4": 1.27
+      }
+    },
+    "SC Freiburg": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 1.73,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.55,
+      "confidence": "low",
+      "confidence_gap": 0.18,
+      "recommendation": "Slight preference for Naive Odds-based - but Multi-Output Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 17,
+        "model2": 13,
+        "model3": 16,
+        "model4": 19
+      },
+      "avg_points": {
+        "model1": 1.55,
+        "model2": 1.18,
+        "model3": 1.45,
+        "model4": 1.73
+      }
+    },
+    "Bayer 04 Leverkusen": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 2.09,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 1.73,
+      "confidence": "medium",
+      "confidence_gap": 0.36,
+      "recommendation": "Recommend Multi-Output Regression - moderately better than alternatives",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 23,
+        "model2": 15,
+        "model3": 18,
+        "model4": 19
+      },
+      "avg_points": {
+        "model1": 2.09,
+        "model2": 1.36,
+        "model3": 1.64,
+        "model4": 1.73
+      }
+    },
+    "1. FC Union Berlin": {
+      "best_model": "model2",
+      "best_model_name": "Multi-Class Classification",
+      "best_avg_points": 1.27,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 1.27,
+      "confidence": "low",
+      "confidence_gap": 0.0,
+      "recommendation": "Slight preference for Multi-Class Classification - but Naive Odds-based is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 13,
+        "model2": 14,
+        "model3": 12,
+        "model4": 14
+      },
+      "avg_points": {
+        "model1": 1.18,
+        "model2": 1.27,
+        "model3": 1.09,
+        "model4": 1.27
+      }
+    },
+    "Borussia M\u00f6nchengladbach": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 0.91,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 0.91,
+      "confidence": "low",
+      "confidence_gap": 0.0,
+      "recommendation": "Slight preference for Multi-Output Regression - but Naive Odds-based is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 10,
+        "model2": 8,
+        "model3": 7,
+        "model4": 10
+      },
+      "avg_points": {
+        "model1": 0.91,
+        "model2": 0.73,
+        "model3": 0.64,
+        "model4": 0.91
+      }
+    },
+    "VfL Wolfsburg": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 1.73,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 1.55,
+      "confidence": "low",
+      "confidence_gap": 0.18,
+      "recommendation": "Slight preference for Multi-Output Regression - but Naive Odds-based is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 19,
+        "model2": 14,
+        "model3": 11,
+        "model4": 17
+      },
+      "avg_points": {
+        "model1": 1.73,
+        "model2": 1.27,
+        "model3": 1.0,
+        "model4": 1.55
+      }
+    },
+    "1. FSV Mainz 05": {
+      "best_model": "model2",
+      "best_model_name": "Multi-Class Classification",
+      "best_avg_points": 1.55,
+      "second_best_model": "model3",
+      "second_best_name": "Poisson Regression",
+      "second_avg_points": 1.55,
+      "confidence": "low",
+      "confidence_gap": 0.0,
+      "recommendation": "Slight preference for Multi-Class Classification - but Poisson Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 15,
+        "model2": 17,
+        "model3": 17,
+        "model4": 12
+      },
+      "avg_points": {
+        "model1": 1.36,
+        "model2": 1.55,
+        "model3": 1.55,
+        "model4": 1.09
+      }
+    },
+    "FC Augsburg": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 1.91,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.36,
+      "confidence": "high",
+      "confidence_gap": 0.55,
+      "recommendation": "Strongly recommend Naive Odds-based - significantly outperforms others",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 15,
+        "model2": 10,
+        "model3": 12,
+        "model4": 21
+      },
+      "avg_points": {
+        "model1": 1.36,
+        "model2": 0.91,
+        "model3": 1.09,
+        "model4": 1.91
+      }
+    },
+    "TSG 1899 Hoffenheim": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 0.91,
+      "second_best_model": "model4",
+      "second_best_name": "Naive Odds-based",
+      "second_avg_points": 0.82,
+      "confidence": "low",
+      "confidence_gap": 0.09,
+      "recommendation": "Slight preference for Multi-Output Regression - but Naive Odds-based is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 10,
+        "model2": 2,
+        "model3": 6,
+        "model4": 9
+      },
+      "avg_points": {
+        "model1": 0.91,
+        "model2": 0.18,
+        "model3": 0.55,
+        "model4": 0.82
+      }
+    },
+    "Borussia Dortmund": {
+      "best_model": "model1",
+      "best_model_name": "Multi-Output Regression",
+      "best_avg_points": 1.91,
+      "second_best_model": "model3",
+      "second_best_name": "Poisson Regression",
+      "second_avg_points": 1.73,
+      "confidence": "low",
+      "confidence_gap": 0.18,
+      "recommendation": "Slight preference for Multi-Output Regression - but Poisson Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 21,
+        "model2": 10,
+        "model3": 19,
+        "model4": 19
+      },
+      "avg_points": {
+        "model1": 1.91,
+        "model2": 0.91,
+        "model3": 1.73,
+        "model4": 1.73
+      }
+    },
+    "VfB Stuttgart": {
+      "best_model": "model4",
+      "best_model_name": "Naive Odds-based",
+      "best_avg_points": 1.73,
+      "second_best_model": "model1",
+      "second_best_name": "Multi-Output Regression",
+      "second_avg_points": 1.64,
+      "confidence": "low",
+      "confidence_gap": 0.09,
+      "recommendation": "Slight preference for Naive Odds-based - but Multi-Output Regression is close",
+      "matches_analyzed": 11,
+      "total_points": {
+        "model1": 18,
+        "model2": 8,
+        "model3": 16,
+        "model4": 19
+      },
+      "avg_points": {
+        "model1": 1.64,
+        "model2": 0.73,
+        "model3": 1.45,
+        "model4": 1.73
+      }
+    }
+  }
+}
