@@ -3,6 +3,7 @@ Main predictor class that orchestrates all components.
 """
 
 import json
+import os
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 
@@ -11,12 +12,28 @@ import pandas as pd
 
 from .config import (
     MODEL_NAMES, TRAIN_TEST_SPLIT_RATIO, MIN_TRAINING_SAMPLES,
-    RECOMMENDATIONS_FILE
+    RECOMMENDATIONS_FILE, TRAINING_SEASONS, CACHE_DIR
 )
 from .data import DataLoader, FixturesFetcher
 from .features import FeatureExtractor
 from .scoring import calculate_kicktipp_points
 from .ensemble import ConsensusEnsemble
+from .ensemble_v2 import (
+    HybridEnsembleV2,
+    SimpleTendencyEnsemble,
+    TendencyExpertEnsemble,
+    TendencyConsensusEnsemble,
+)
+from .ensembles.experimental import (
+    OptimizedConsensusEnsemble,
+    HybridEnsemble,
+    AdaptiveScorelineEnsemble,
+    BayesianOptimalEnsemble,
+    AggressiveScorelineEnsemble,
+    UltimateTendencyEnsemble,
+    SuperConsensusEnsemble,
+    MaxPointsEnsemble,
+)
 from .models import (
     BaseModel,
     MultiOutputRegressionModel,
@@ -24,6 +41,66 @@ from .models import (
     PoissonRegressionModel,
     NaiveOddsModel,
 )
+
+# Backtest results file path
+BACKTEST_RESULTS_FILE = os.path.join(CACHE_DIR, 'backtest_results.json')
+
+
+# Map of ensemble class names to classes
+ENSEMBLE_CLASSES = {
+    'ConsensusEnsemble': ConsensusEnsemble,
+    'SimpleTendencyEnsemble': SimpleTendencyEnsemble,
+    'TendencyExpertEnsemble': TendencyExpertEnsemble,
+    'TendencyConsensusEnsemble': TendencyConsensusEnsemble,
+    'HybridEnsembleV2': HybridEnsembleV2,
+    'OptimizedConsensusEnsemble': OptimizedConsensusEnsemble,
+    'HybridEnsemble': HybridEnsemble,
+    'AdaptiveScorelineEnsemble': AdaptiveScorelineEnsemble,
+    'BayesianOptimalEnsemble': BayesianOptimalEnsemble,
+    'AggressiveScorelineEnsemble': AggressiveScorelineEnsemble,
+    'UltimateTendencyEnsemble': UltimateTendencyEnsemble,
+    'SuperConsensusEnsemble': SuperConsensusEnsemble,
+    'MaxPointsEnsemble': MaxPointsEnsemble,
+}
+
+
+def load_best_ensemble():
+    """
+    Load the best ensemble from backtest results.
+
+    Returns:
+        Tuple of (ensemble_instance, ensemble_name, avg_points) or (HybridEnsembleV2(), 'HybridEnsembleV2', None) as default
+    """
+    if not os.path.exists(BACKTEST_RESULTS_FILE):
+        return HybridEnsembleV2(), 'HybridEnsembleV2', None
+
+    try:
+        with open(BACKTEST_RESULTS_FILE, 'r') as f:
+            results = json.load(f)
+
+        best = results.get('best_ensemble', {})
+        class_name = best.get('class_name', 'HybridEnsembleV2')
+        avg_points = best.get('avg_points')
+
+        ensemble_class = ENSEMBLE_CLASSES.get(class_name, HybridEnsembleV2)
+        return ensemble_class(), class_name, avg_points
+
+    except (json.JSONDecodeError, KeyError):
+        return HybridEnsembleV2(), 'HybridEnsembleV2', None
+
+
+# Bundesliga derbies and rivalries - used for derby-aware predictions
+DERBIES = {
+    ('bayern', 'dortmund'), ('dortmund', 'bayern'),  # Der Klassiker
+    ('dortmund', 'schalke'), ('schalke', 'dortmund'),  # Revierderby
+    ('gladbach', 'koln'), ('koln', 'gladbach'),  # Rhine Derby
+    ('hamburg', 'bremen'), ('bremen', 'hamburg'),  # Nordderby
+    ('hamburg', 'st pauli'), ('st pauli', 'hamburg'),  # Hamburg Derby
+    ('frankfurt', 'mainz'), ('mainz', 'frankfurt'),  # Rhein-Main Derby
+    ('leverkusen', 'koln'), ('koln', 'leverkusen'),  # Rhineland Derby
+    ('union berlin', 'hertha'), ('hertha', 'union berlin'),  # Berlin Derby
+    ('leipzig', 'union berlin'), ('union berlin', 'leipzig'),  # East German Derby
+}
 
 
 class BundesligaPredictor:
@@ -51,7 +128,9 @@ class BundesligaPredictor:
         self.verbose = verbose
         self._data_loader = DataLoader()
         self._fixtures_fetcher = FixturesFetcher()
-        self._ensemble = ConsensusEnsemble()
+
+        # Load best ensemble from backtest results (or default to HybridEnsembleV2)
+        self._ensemble, self._ensemble_name, self._ensemble_score = load_best_ensemble()
 
         # Initialize models
         self._models: Dict[str, BaseModel] = {
@@ -80,39 +159,77 @@ class BundesligaPredictor:
         """
         self._log("\n1. Loading match data...")
         self._df = self._data_loader.load_cached_matches()
-        self._feature_extractor = FeatureExtractor(self._df)
 
         self._log(f"   Date range: {self._df['date'].min().date()} to {self._df['date'].max().date()}")
         return self._df
+
+    def _get_training_data(self) -> pd.DataFrame:
+        """
+        Get training data: last N seasons + current season data.
+
+        Uses TRAINING_SEASONS config to determine how many previous seasons.
+        """
+        if self._df is None:
+            self.load_data()
+
+        df = self._df.copy()
+
+        if 'Season' in df.columns:
+            seasons = sorted(df['Season'].unique())
+            current_season = seasons[-1]
+
+            # Get last N seasons before current + current season data
+            training_seasons = seasons[-(TRAINING_SEASONS + 1):]
+            training_df = df[df['Season'].isin(training_seasons)].copy()
+
+            self._log(f"   Training seasons: {', '.join(training_seasons)}")
+        else:
+            # Fallback: use date-based selection
+            now = datetime.now()
+            if now.month >= 8:
+                current_season_start = pd.Timestamp(f'{now.year}-08-01')
+            else:
+                current_season_start = pd.Timestamp(f'{now.year-1}-08-01')
+
+            training_start = current_season_start - pd.DateOffset(years=TRAINING_SEASONS)
+            training_df = df[df['date'] >= training_start].copy()
+
+            self._log(f"   Training from: {training_start.date()}")
+
+        self._log(f"   Training matches: {len(training_df)}")
+        return training_df
 
     def train_models(self, df: Optional[pd.DataFrame] = None) -> Dict[str, Dict[str, float]]:
         """
         Train all models on the data.
 
+        Uses last N seasons + current season data for training (walk-forward style).
+
         Args:
-            df: Optional DataFrame to use (uses cached data if not provided)
+            df: Optional DataFrame to use (uses training data selection if not provided)
 
         Returns:
             Dictionary of training metrics per model
         """
         if df is None:
-            if self._df is None:
-                self.load_data()
-            df = self._df
+            df = self._get_training_data()
+
+        # Create feature extractor with training data
+        self._feature_extractor = FeatureExtractor(df)
 
         self._log("\n2. Creating features...")
         X, y_home, y_away, scorelines = self._feature_extractor.extract_training_features(df)
         self._log(f"   Created features for {len(X)} matches")
         self._log(f"   Unique scorelines: {len(np.unique(scorelines))}")
 
-        # Temporal split
+        # Temporal split for validation
         split_idx = int(len(X) * TRAIN_TEST_SPLIT_RATIO)
         X_train, X_test = X[:split_idx], X[split_idx:]
         y_home_train, y_home_test = y_home[:split_idx], y_home[split_idx:]
         y_away_train, y_away_test = y_away[:split_idx], y_away[split_idx:]
         scorelines_train, scorelines_test = scorelines[:split_idx], scorelines[split_idx:]
 
-        self._log(f"   Training on {len(X_train)} matches, testing on {len(X_test)}")
+        self._log(f"   Training on {len(X_train)} matches, validating on {len(X_test)}")
 
         self._log("\n3. Training models...")
         self._log("-" * 70)
@@ -148,8 +265,13 @@ class BundesligaPredictor:
         best_id = max(metrics.keys(), key=lambda k: metrics[k]['avg_points_per_match'])
         best_score = metrics[best_id]['avg_points_per_match']
         self._log(f"\n   Best individual: {MODEL_NAMES[best_id]} ({best_score:.2f} pts/match)")
-        self._log(f"\n   🎯 USING: Consensus Ensemble (combines all 4 models)")
-        self._log(f"      Strategy: If 3+ models agree → use consensus, else → Model4 fallback")
+
+        # Show which ensemble is being used
+        ensemble_display = self._ensemble_name.replace('Ensemble', '').replace('V2', ' V2')
+        if self._ensemble_score:
+            self._log(f"\n   🎯 USING: {ensemble_display} (from backtest: {self._ensemble_score:.2f} pts/match)")
+        else:
+            self._log(f"\n   🎯 USING: {ensemble_display} (default - run backtest to optimize)")
 
         self._is_trained = True
         self._training_metrics = metrics
@@ -186,6 +308,38 @@ class BundesligaPredictor:
 
         return predictions
 
+    def _normalize_team_name(self, name: str) -> str:
+        """Normalize team name for derby detection."""
+        name = str(name).lower().strip()
+
+        replacements = {
+            'fc bayern münchen': 'bayern', 'bayern munich': 'bayern',
+            'borussia dortmund': 'dortmund', 'bvb': 'dortmund',
+            'borussia mönchengladbach': 'gladbach', "m'gladbach": 'gladbach',
+            'fc schalke 04': 'schalke', 'schalke 04': 'schalke',
+            '1. fc köln': 'koln', 'fc köln': 'koln', 'koln': 'koln',
+            'hamburger sv': 'hamburg', 'hsv': 'hamburg',
+            'sv werder bremen': 'bremen', 'werder bremen': 'bremen',
+            'fc st. pauli': 'st pauli', 'fc st. pauli 1910': 'st pauli',
+            'eintracht frankfurt': 'frankfurt', 'sge': 'frankfurt',
+            '1. fsv mainz 05': 'mainz', 'mainz 05': 'mainz',
+            'bayer 04 leverkusen': 'leverkusen', 'leverkusen': 'leverkusen',
+            '1. fc union berlin': 'union berlin', 'union berlin': 'union berlin',
+            'hertha bsc': 'hertha', 'hertha berlin': 'hertha',
+            'rb leipzig': 'leipzig', 'rasenballsport leipzig': 'leipzig',
+        }
+
+        for old, new in replacements.items():
+            if old in name:
+                return new
+        return name
+
+    def _is_derby(self, home_team: str, away_team: str) -> bool:
+        """Check if a match is a derby."""
+        home_norm = self._normalize_team_name(home_team)
+        away_norm = self._normalize_team_name(away_team)
+        return (home_norm, away_norm) in DERBIES
+
     def _predict_match(
         self,
         fixture: Dict[str, Any],
@@ -194,12 +348,16 @@ class BundesligaPredictor:
         """Make prediction for a single match."""
         home_team = fixture['homeTeam']['name']
         away_team = fixture['awayTeam']['name']
-        match_date = pd.Timestamp(fixture['utcDate'])
+        # Convert to tz-naive timestamp to match training data
+        match_date = pd.Timestamp(fixture['utcDate']).tz_localize(None)
 
         # Get odds
         odds_home, odds_draw, odds_away = self._fixtures_fetcher.find_fixture_odds(
             home_team, away_team, upcoming_odds
         )
+
+        # Check if this is a derby
+        is_derby = self._is_derby(home_team, away_team)
 
         # Extract features
         X = self._feature_extractor.extract_match_features(
@@ -219,14 +377,21 @@ class BundesligaPredictor:
             model_predictions[model_id] = (pred['home_score'], pred['away_score'])
             details[model_id] = pred
 
-        # Ensemble prediction
-        ensemble_pred, strategy, ensemble_details = self._ensemble.combine(model_predictions)
+        # Ensemble prediction (pass odds and derby flag for improved predictions)
+        ensemble_pred, strategy, ensemble_details = self._ensemble.combine(
+            model_predictions,
+            odds_home=odds_home,
+            odds_draw=odds_draw,
+            odds_away=odds_away,
+            is_derby=is_derby
+        )
 
         return {
             'home_team': home_team,
             'away_team': away_team,
             'date': match_date.strftime('%Y-%m-%d %H:%M'),
             'matchday': fixture.get('matchday', '?'),
+            'is_derby': is_derby,
             'odds': {
                 'home': odds_home,
                 'draw': odds_draw,
@@ -284,11 +449,12 @@ class BundesligaPredictor:
             ens = pred['ensemble']
             print()
             print(f"  [E] ENSEMBLE:                    {ens['scoreline']}  <-- USE THIS")
-            if ens['strategy'] == 'consensus':
-                count = ens['details']['count']
-                print(f"      Strategy: CONSENSUS ({count}/4 models agree)")
-            else:
+            if ens['strategy'] in ['consensus', 'tendency_consensus', 'tendency_expert']:
+                print(f"      Strategy: {ens['strategy'].upper()}")
+            elif 'fallback_model' in ens.get('details', {}):
                 print(f"      Strategy: {MODEL_NAMES.get(ens['details']['fallback_model'], 'fallback')}")
+            else:
+                print(f"      Strategy: {ens['strategy']}")
 
         # Summary table
         print("\n" + "=" * 70)
@@ -300,11 +466,11 @@ class BundesligaPredictor:
         for pred in predictions:
             match_name = f"{pred['home_team'][:20]} vs {pred['away_team'][:20]}"
             ens = pred['ensemble']
-            strategy = "CONS" if ens['strategy'] == 'consensus' else "M4(fallback)"
-            print(f"{match_name:<45} {ens['scoreline']:>12} {strategy:>12}")
+            strategy_short = ens['strategy'][:12].upper()
+            print(f"{match_name:<45} {ens['scoreline']:>12} {strategy_short:>12}")
 
         print("-" * 70)
-        print("\nStrategy: CONS = Consensus (3+ agree), M4 = Naive Odds fallback")
+        print("\nStrategies: TENDENCY_CON = Tendency Consensus, MODEL4_FALL = Model4 Fallback")
 
     def run(self) -> List[Dict[str, Any]]:
         """

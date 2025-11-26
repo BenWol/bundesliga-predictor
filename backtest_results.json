@@ -1,0 +1,129 @@
+{
+  "updated_at": "2025-11-26T09:28:51.688807",
+  "benchmark": 1.65,
+  "best_ensemble": {
+    "key": "ens_ultimate_tendency",
+    "class_name": "UltimateTendencyEnsemble",
+    "avg_points": 1.5555555555555556,
+    "beats_benchmark": false
+  },
+  "all_ensembles": {
+    "ens_consensus": {
+      "avg_points": 1.4242424242424243,
+      "total_points": 141,
+      "matches": 99,
+      "exact": 7,
+      "diff": 17,
+      "tend": 31,
+      "wrong": 44
+    },
+    "ens_simple_tendency": {
+      "avg_points": 1.4646464646464648,
+      "total_points": 145,
+      "matches": 99,
+      "exact": 8,
+      "diff": 17,
+      "tend": 31,
+      "wrong": 43
+    },
+    "ens_tendency_expert": {
+      "avg_points": 1.5151515151515151,
+      "total_points": 150,
+      "matches": 99,
+      "exact": 8,
+      "diff": 18,
+      "tend": 32,
+      "wrong": 41
+    },
+    "ens_tendency_consensus": {
+      "avg_points": 1.4545454545454546,
+      "total_points": 144,
+      "matches": 99,
+      "exact": 8,
+      "diff": 16,
+      "tend": 32,
+      "wrong": 43
+    },
+    "ens_hybrid_v2": {
+      "avg_points": 1.4848484848484849,
+      "total_points": 147,
+      "matches": 99,
+      "exact": 9,
+      "diff": 15,
+      "tend": 33,
+      "wrong": 42
+    },
+    "ens_optimized_consensus": {
+      "avg_points": 1.4242424242424243,
+      "total_points": 141,
+      "matches": 99,
+      "exact": 7,
+      "diff": 17,
+      "tend": 31,
+      "wrong": 44
+    },
+    "ens_hybrid": {
+      "avg_points": 1.4343434343434343,
+      "total_points": 142,
+      "matches": 99,
+      "exact": 7,
+      "diff": 18,
+      "tend": 30,
+      "wrong": 44
+    },
+    "ens_adaptive_scoreline": {
+      "avg_points": 1.4141414141414141,
+      "total_points": 140,
+      "matches": 99,
+      "exact": 5,
+      "diff": 18,
+      "tend": 33,
+      "wrong": 43
+    },
+    "ens_bayesian_optimal": {
+      "avg_points": 1.292929292929293,
+      "total_points": 128,
+      "matches": 99,
+      "exact": 7,
+      "diff": 14,
+      "tend": 29,
+      "wrong": 49
+    },
+    "ens_aggressive_scoreline": {
+      "avg_points": 1.4343434343434343,
+      "total_points": 142,
+      "matches": 99,
+      "exact": 7,
+      "diff": 18,
+      "tend": 30,
+      "wrong": 44
+    },
+    "ens_ultimate_tendency": {
+      "avg_points": 1.5555555555555556,
+      "total_points": 154,
+      "matches": 99,
+      "exact": 11,
+      "diff": 16,
+      "tend": 31,
+      "wrong": 41
+    },
+    "ens_super_consensus": {
+      "avg_points": 1.4242424242424243,
+      "total_points": 141,
+      "matches": 99,
+      "exact": 7,
+      "diff": 17,
+      "tend": 31,
+      "wrong": 44
+    },
+    "ens_max_points": {
+      "avg_points": 1.4242424242424243,
+      "total_points": 141,
+      "matches": 99,
+      "exact": 6,
+      "diff": 19,
+      "tend": 30,
+      "wrong": 44
+    }
+  }
+}

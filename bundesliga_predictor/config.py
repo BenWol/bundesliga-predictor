@@ -37,6 +37,7 @@ RF_MAX_DEPTH_POISSON = 10
 # Training Configuration
 TRAIN_TEST_SPLIT_RATIO = 0.8
 MIN_TRAINING_SAMPLES = 50
+TRAINING_SEASONS = 2  # Number of previous seasons to use for training
 
 # Kicktipp Scoring
 POINTS_EXACT = 4
