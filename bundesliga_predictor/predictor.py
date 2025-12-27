@@ -41,10 +41,32 @@ from .models import (
     PoissonRegressionModel,
     NaiveOddsModel,
 )
+from .models.experimental import (
+    GradientBoostingModel,
+    BivariatePoissonModel,
+    SmartOddsModel,
+    TendencyFirstModel,
+    ProbabilityMaxModel,
+)
 
 # Backtest results file path
 BACKTEST_RESULTS_FILE = os.path.join(CACHE_DIR, 'backtest_results.json')
 
+# Map of model keys to classes (for experimental models)
+MODEL_CLASSES = {
+    'model1': MultiOutputRegressionModel,
+    'model2': MultiClassClassificationModel,
+    'model3': PoissonRegressionModel,
+    'model4': NaiveOddsModel,
+    'gradient_boosting': GradientBoostingModel,
+    'bivariate_poisson': BivariatePoissonModel,
+    'smart_odds': SmartOddsModel,
+    'tendency_first': TendencyFirstModel,
+    'probability_max': ProbabilityMaxModel,
+}
+
+# Core models that are always used
+CORE_MODELS = ['model1', 'model2', 'model3', 'model4']
 
 # Map of ensemble class names to classes
 ENSEMBLE_CLASSES = {
@@ -64,29 +86,72 @@ ENSEMBLE_CLASSES = {
 }
 
 
-def load_best_ensemble():
+def load_backtest_results():
     """
-    Load the best ensemble from backtest results.
+    Load backtest results including best model and best ensemble.
 
     Returns:
-        Tuple of (ensemble_instance, ensemble_name, avg_points) or (HybridEnsembleV2(), 'HybridEnsembleV2', None) as default
+        Dict with 'best_model' and 'best_ensemble' info, or defaults if not available
     """
+    defaults = {
+        'best_model': {
+            'key': 'model4',
+            'display_name': 'Naive Odds',
+            'avg_points': None,
+        },
+        'best_ensemble': {
+            'instance': HybridEnsembleV2(),
+            'class_name': 'HybridEnsembleV2',
+            'display_name': 'Hybrid V2',
+            'avg_points': None,
+        }
+    }
+
     if not os.path.exists(BACKTEST_RESULTS_FILE):
-        return HybridEnsembleV2(), 'HybridEnsembleV2', None
+        return defaults
 
     try:
         with open(BACKTEST_RESULTS_FILE, 'r') as f:
             results = json.load(f)
 
-        best = results.get('best_ensemble', {})
-        class_name = best.get('class_name', 'HybridEnsembleV2')
-        avg_points = best.get('avg_points')
+        # Load best model info
+        best_model = results.get('best_model', {})
+        if best_model:
+            defaults['best_model'] = {
+                'key': best_model.get('key', 'model4'),
+                'display_name': best_model.get('display_name', 'Naive Odds'),
+                'avg_points': best_model.get('avg_points'),
+            }
 
-        ensemble_class = ENSEMBLE_CLASSES.get(class_name, HybridEnsembleV2)
-        return ensemble_class(), class_name, avg_points
+        # Load best ensemble info
+        best_ensemble = results.get('best_ensemble', {})
+        if best_ensemble:
+            class_name = best_ensemble.get('class_name', 'HybridEnsembleV2')
+            ensemble_class = ENSEMBLE_CLASSES.get(class_name, HybridEnsembleV2)
+            defaults['best_ensemble'] = {
+                'instance': ensemble_class(),
+                'class_name': class_name,
+                'display_name': best_ensemble.get('display_name', 'Hybrid V2'),
+                'avg_points': best_ensemble.get('avg_points'),
+            }
+
+        return defaults
 
     except (json.JSONDecodeError, KeyError):
-        return HybridEnsembleV2(), 'HybridEnsembleV2', None
+        return defaults
+
+
+def load_best_ensemble():
+    """
+    Load the best ensemble from backtest results.
+    Legacy function for backwards compatibility.
+
+    Returns:
+        Tuple of (ensemble_instance, ensemble_name, avg_points) or (HybridEnsembleV2(), 'HybridEnsembleV2', None) as default
+    """
+    results = load_backtest_results()
+    best = results['best_ensemble']
+    return best['instance'], best['class_name'], best['avg_points']
 
 
 # Bundesliga derbies and rivalries - used for derby-aware predictions
@@ -129,16 +194,34 @@ class BundesligaPredictor:
         self._data_loader = DataLoader()
         self._fixtures_fetcher = FixturesFetcher()
 
-        # Load best ensemble from backtest results (or default to HybridEnsembleV2)
-        self._ensemble, self._ensemble_name, self._ensemble_score = load_best_ensemble()
+        # Load backtest results (best model and best ensemble)
+        backtest_results = load_backtest_results()
 
-        # Initialize models
+        # Best model info
+        self._best_model_key = backtest_results['best_model']['key']
+        self._best_model_name = backtest_results['best_model']['display_name']
+        self._best_model_score = backtest_results['best_model']['avg_points']
+
+        # Best ensemble info
+        self._ensemble = backtest_results['best_ensemble']['instance']
+        self._ensemble_name = backtest_results['best_ensemble']['class_name']
+        self._ensemble_display_name = backtest_results['best_ensemble']['display_name']
+        self._ensemble_score = backtest_results['best_ensemble']['avg_points']
+
+        # Initialize core models
         self._models: Dict[str, BaseModel] = {
             'model1': MultiOutputRegressionModel(),
             'model2': MultiClassClassificationModel(),
             'model3': PoissonRegressionModel(),
             'model4': NaiveOddsModel(),
         }
+
+        # Add best model if it's experimental (not a core model)
+        if self._best_model_key not in CORE_MODELS:
+            model_class = MODEL_CLASSES.get(self._best_model_key)
+            if model_class:
+                self._models[self._best_model_key] = model_class()
+                self._log(f"   Added experimental model: {self._best_model_name}")
 
         self._df: Optional[pd.DataFrame] = None
         self._feature_extractor: Optional[FeatureExtractor] = None
@@ -237,18 +320,21 @@ class BundesligaPredictor:
         metrics = {}
 
         for model_id, model in self._models.items():
-            if model_id == 'model4':
-                # Naive model doesn't need training
+            # Models that don't need scorelines for training
+            no_scoreline_models = ['model4', 'smart_odds']
+            if model_id in no_scoreline_models:
                 model.train(X_train, y_home_train, y_away_train)
                 eval_metrics = model.evaluate(X_test, y_home_test, y_away_test)
             else:
-                # Train ML models
+                # Train ML models with scorelines
                 model.train(X_train, y_home_train, y_away_train, scorelines_train)
                 eval_metrics = model.evaluate(X_test, y_home_test, y_away_test)
 
             metrics[model_id] = eval_metrics
 
-            self._log(f"\n[{model_id[-1]}] {model.name}:")
+            # Use model name for display, with special handling for experimental models
+            display_label = model_id[-1] if model_id.startswith('model') else model_id[0].upper()
+            self._log(f"\n[{display_label}] {model.name}:")
             self._log(f"    Exact Score Accuracy: {eval_metrics['exact_accuracy']:.1%}")
             self._log(f"    Kicktipp Score: {eval_metrics['total_points']}/{eval_metrics['max_possible']} "
                      f"({eval_metrics['kicktipp_percentage']:.1f}%)")
@@ -369,7 +455,9 @@ class BundesligaPredictor:
         details = {}
 
         for model_id, model in self._models.items():
-            if model_id == 'model4':
+            # Models that need odds for prediction
+            odds_models = ['model4', 'smart_odds']
+            if model_id in odds_models:
                 pred = model.predict_with_details(X, odds_home=odds_home, odds_draw=odds_draw, odds_away=odds_away)
             else:
                 pred = model.predict_with_details(X)
@@ -440,10 +528,18 @@ class BundesligaPredictor:
                 print(f"  Odds: {pred['odds']['home']:.2f} - {pred['odds']['draw']:.2f} - {pred['odds']['away']:.2f}")
 
             print()
-            for model_id in ['model1', 'model2', 'model3', 'model4']:
+            # Print core models
+            for model_id in CORE_MODELS:
                 name = MODEL_NAMES[model_id]
                 scoreline = pred['predictions'][model_id]['scoreline']
-                print(f"  [{model_id[-1]}] {name:<28} {scoreline}")
+                # Mark best model
+                marker = " *" if model_id == self._best_model_key else ""
+                print(f"  [{model_id[-1]}] {name:<28} {scoreline}{marker}")
+
+            # Print best model if it's experimental
+            if self._best_model_key not in CORE_MODELS and self._best_model_key in pred['predictions']:
+                scoreline = pred['predictions'][self._best_model_key]['scoreline']
+                print(f"  [B] {self._best_model_name:<28} {scoreline} *")
 
             # Ensemble
             ens = pred['ensemble']
@@ -456,21 +552,44 @@ class BundesligaPredictor:
             else:
                 print(f"      Strategy: {ens['strategy']}")
 
-        # Summary table
+        # Best Model predictions table
         print("\n" + "=" * 70)
-        print("ENSEMBLE PREDICTIONS SUMMARY")
+        model_title = f"BEST MODEL: {self._best_model_name}"
+        if self._best_model_score:
+            model_title += f" ({self._best_model_score:.2f} pts/match)"
+        print(model_title)
         print("=" * 70)
-        print(f"{'Match':<45} {'Prediction':>12} {'Strategy':>12}")
+        print(f"{'Match':<50} {'Prediction':>12}")
         print("-" * 70)
 
         for pred in predictions:
-            match_name = f"{pred['home_team'][:20]} vs {pred['away_team'][:20]}"
-            ens = pred['ensemble']
-            strategy_short = ens['strategy'][:12].upper()
-            print(f"{match_name:<45} {ens['scoreline']:>12} {strategy_short:>12}")
+            match_name = f"{pred['home_team'][:22]} vs {pred['away_team'][:22]}"
+            best_model_pred = pred['predictions'].get(self._best_model_key, {})
+            scoreline = best_model_pred.get('scoreline', '?-?')
+            print(f"{match_name:<50} {scoreline:>12}")
 
         print("-" * 70)
-        print("\nStrategies: TENDENCY_CON = Tendency Consensus, MODEL4_FALL = Model4 Fallback")
+
+        # Best Ensemble predictions table
+        print("\n" + "=" * 70)
+        ensemble_title = f"BEST ENSEMBLE: {self._ensemble_display_name}"
+        if self._ensemble_score:
+            ensemble_title += f" ({self._ensemble_score:.2f} pts/match)"
+        print(ensemble_title)
+        print("=" * 70)
+        print(f"{'Match':<50} {'Prediction':>12}")
+        print("-" * 70)
+
+        for pred in predictions:
+            match_name = f"{pred['home_team'][:22]} vs {pred['away_team'][:22]}"
+            ens = pred['ensemble']
+            print(f"{match_name:<50} {ens['scoreline']:>12}")
+
+        print("-" * 70)
+
+        # Note about source
+        if self._best_model_score or self._ensemble_score:
+            print("\nScores from walk-forward backtest on current season.")
 
     def run(self) -> List[Dict[str, Any]]:
         """

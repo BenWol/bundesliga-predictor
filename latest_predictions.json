@@ -1,131 +1,251 @@
 {
-  "generated_at": "2025-11-26T12:19:27.556873",
-  "matchday": 12,
-  "predictions": [
-    {
-      "home_team": "Borussia M\u00f6nchengladbach",
-      "away_team": "RB Leipzig",
-      "date": "2025-11-28 19:30",
-      "home_score": 0,
-      "away_score": 1,
-      "scoreline": "0-1",
-      "strategy": "smart_away",
-      "odds": {
-        "home": 3.035,
-        "draw": 3.9225,
-        "away": 2.215
+  "generated_at": "2025-12-27T17:51:58.001375",
+  "matchday": 16,
+  "best_model": {
+    "name": "Bivariate Poisson",
+    "avg_points": 1.4296296296296296,
+    "predictions": [
+      {
+        "home_team": "Eintracht Frankfurt",
+        "away_team": "Borussia Dortmund",
+        "date": "2026-01-09 19:30",
+        "home_score": 1,
+        "away_score": 2,
+        "scoreline": "1-2"
+      },
+      {
+        "home_team": "SC Freiburg",
+        "away_team": "Hamburger SV",
+        "date": "2026-01-10 14:30",
+        "home_score": 1,
+        "away_score": 0,
+        "scoreline": "1-0"
+      },
+      {
+        "home_team": "SV Werder Bremen",
+        "away_team": "TSG 1899 Hoffenheim",
+        "date": "2026-01-10 14:30",
+        "home_score": 1,
+        "away_score": 2,
+        "scoreline": "1-2"
+      },
+      {
+        "home_team": "1. FC Union Berlin",
+        "away_team": "1. FSV Mainz 05",
+        "date": "2026-01-10 14:30",
+        "home_score": 1,
+        "away_score": 1,
+        "scoreline": "1-1"
+      },
+      {
+        "home_team": "FC St. Pauli 1910",
+        "away_team": "RB Leipzig",
+        "date": "2026-01-10 14:30",
+        "home_score": 0,
+        "away_score": 2,
+        "scoreline": "0-2"
+      },
+      {
+        "home_team": "1. FC Heidenheim 1846",
+        "away_team": "1. FC K\u00f6ln",
+        "date": "2026-01-10 14:30",
+        "home_score": 0,
+        "away_score": 2,
+        "scoreline": "0-2"
+      },
+      {
+        "home_team": "Bayer 04 Leverkusen",
+        "away_team": "VfB Stuttgart",
+        "date": "2026-01-10 17:30",
+        "home_score": 1,
+        "away_score": 0,
+        "scoreline": "1-0"
+      },
+      {
+        "home_team": "Borussia M\u00f6nchengladbach",
+        "away_team": "FC Augsburg",
+        "date": "2026-01-11 14:30",
+        "home_score": 1,
+        "away_score": 1,
+        "scoreline": "1-1"
+      },
+      {
+        "home_team": "FC Bayern M\u00fcnchen",
+        "away_team": "VfL Wolfsburg",
+        "date": "2026-01-11 16:30",
+        "home_score": 3,
+        "away_score": 1,
+        "scoreline": "3-1"
       }
-    },
-    {
-      "home_team": "FC Bayern M\u00fcnchen",
-      "away_team": "FC St. Pauli 1910",
-      "date": "2025-11-29 14:30",
-      "home_score": 3,
-      "away_score": 0,
-      "scoreline": "3-0",
-      "strategy": "smart_home",
-      "odds": {
-        "home": 1.1175000000000002,
-        "draw": 10.3625,
-        "away": 26.490000000000002
+    ]
+  },
+  "best_ensemble": {
+    "name": "Hybrid V2",
+    "avg_points": 1.3703703703703705,
+    "predictions": [
+      {
+        "home_team": "Eintracht Frankfurt",
+        "away_team": "Borussia Dortmund",
+        "date": "2026-01-09 19:30",
+        "home_score": 1,
+        "away_score": 2,
+        "scoreline": "1-2",
+        "strategy": "consensus_aligned"
+      },
+      {
+        "home_team": "SC Freiburg",
+        "away_team": "Hamburger SV",
+        "date": "2026-01-10 14:30",
+        "home_score": 2,
+        "away_score": 1,
+        "scoreline": "2-1",
+        "strategy": "fallback"
+      },
+      {
+        "home_team": "SV Werder Bremen",
+        "away_team": "TSG 1899 Hoffenheim",
+        "date": "2026-01-10 14:30",
+        "home_score": 1,
+        "away_score": 2,
+        "scoreline": "1-2",
+        "strategy": "consensus_aligned"
+      },
+      {
+        "home_team": "1. FC Union Berlin",
+        "away_team": "1. FSV Mainz 05",
+        "date": "2026-01-10 14:30",
+        "home_score": 2,
+        "away_score": 1,
+        "scoreline": "2-1",
+        "strategy": "fallback"
+      },
+      {
+        "home_team": "FC St. Pauli 1910",
+        "away_team": "RB Leipzig",
+        "date": "2026-01-10 14:30",
+        "home_score": 0,
+        "away_score": 2,
+        "scoreline": "0-2",
+        "strategy": "consensus_aligned"
+      },
+      {
+        "home_team": "1. FC Heidenheim 1846",
+        "away_team": "1. FC K\u00f6ln",
+        "date": "2026-01-10 14:30",
+        "home_score": 1,
+        "away_score": 2,
+        "scoreline": "1-2",
+        "strategy": "consensus_aligned"
+      },
+      {
+        "home_team": "Bayer 04 Leverkusen",
+        "away_team": "VfB Stuttgart",
+        "date": "2026-01-10 17:30",
+        "home_score": 2,
+        "away_score": 1,
+        "scoreline": "2-1",
+        "strategy": "consensus_aligned"
+      },
+      {
+        "home_team": "Borussia M\u00f6nchengladbach",
+        "away_team": "FC Augsburg",
+        "date": "2026-01-11 14:30",
+        "home_score": 2,
+        "away_score": 1,
+        "scoreline": "2-1",
+        "strategy": "fallback"
+      },
+      {
+        "home_team": "FC Bayern M\u00fcnchen",
+        "away_team": "VfL Wolfsburg",
+        "date": "2026-01-11 16:30",
+        "home_score": 3,
+        "away_score": 1,
+        "scoreline": "3-1",
+        "strategy": "consensus_aligned"
       }
-    },
-    {
-      "home_team": "SV Werder Bremen",
-      "away_team": "1. FC K\u00f6ln",
-      "date": "2025-11-29 14:30",
-      "home_score": 1,
-      "away_score": 0,
-      "scoreline": "1-0",
-      "strategy": "smart_home",
-      "odds": {
-        "home": 2.2925,
-        "draw": 3.86,
-        "away": 2.96
-      }
-    },
-    {
-      "home_team": "1. FC Union Berlin",
-      "away_team": "1. FC Heidenheim 1846",
-      "date": "2025-11-29 14:30",
-      "home_score": 2,
-      "away_score": 1,
-      "scoreline": "2-1",
-      "strategy": "odds_override",
-      "odds": {
-        "home": 1.6524999999999999,
-        "draw": 4.05,
-        "away": 5.3425
-      }
-    },
-    {
-      "home_team": "TSG 1899 Hoffenheim",
-      "away_team": "FC Augsburg",
-      "date": "2025-11-29 14:30",
-      "home_score": 2,
-      "away_score": 0,
-      "scoreline": "2-0",
-      "strategy": "odds_home",
-      "odds": {
-        "home": 1.71,
-        "draw": 4.305,
-        "away": 4.55
-      }
-    },
-    {
-      "home_team": "Bayer 04 Leverkusen",
-      "away_team": "Borussia Dortmund",
-      "date": "2025-11-29 17:30",
-      "home_score": 1,
-      "away_score": 0,
-      "scoreline": "1-0",
-      "strategy": "smart_home",
-      "odds": {
-        "home": 2.5425,
-        "draw": 3.77,
-        "away": 2.66
-      }
-    },
-    {
-      "home_team": "Hamburger SV",
-      "away_team": "VfB Stuttgart",
-      "date": "2025-11-30 14:30",
-      "home_score": 0,
-      "away_score": 1,
-      "scoreline": "0-1",
-      "strategy": "smart_away",
-      "odds": {
-        "home": 3.1100000000000003,
-        "draw": 3.7575,
-        "away": 2.2275
-      }
-    },
+    ]
+  },
+  "odds": [
     {
       "home_team": "Eintracht Frankfurt",
-      "away_team": "VfL Wolfsburg",
-      "date": "2025-11-30 16:30",
-      "home_score": 1,
-      "away_score": 0,
-      "scoreline": "1-0",
-      "strategy": "smart_home",
+      "away_team": "Borussia Dortmund",
       "odds": {
-        "home": 1.6724999999999999,
-        "draw": 4.42,
-        "away": 4.7
+        "home": 3.285,
+        "draw": 3.7225,
+        "away": 2.0925000000000002
       }
     },
     {
       "home_team": "SC Freiburg",
-      "away_team": "1. FSV Mainz 05",
-      "date": "2025-11-30 18:30",
-      "home_score": 1,
-      "away_score": 0,
-      "scoreline": "1-0",
-      "strategy": "smart_home",
+      "away_team": "Hamburger SV",
       "odds": {
-        "home": 2.075,
-        "draw": 3.43,
-        "away": 3.7875
+        "home": 1.8175000000000001,
+        "draw": 3.62,
+        "away": 4.592499999999999
+      }
+    },
+    {
+      "home_team": "SV Werder Bremen",
+      "away_team": "TSG 1899 Hoffenheim",
+      "odds": {
+        "home": 2.8025,
+        "draw": 3.7675,
+        "away": 2.3575
+      }
+    },
+    {
+      "home_team": "1. FC Union Berlin",
+      "away_team": "1. FSV Mainz 05",
+      "odds": {
+        "home": 2.18,
+        "draw": 3.23,
+        "away": 3.6075
+      }
+    },
+    {
+      "home_team": "FC St. Pauli 1910",
+      "away_team": "RB Leipzig",
+      "odds": {
+        "home": 3.845,
+        "draw": 3.6574999999999998,
+        "away": 1.9525
+      }
+    },
+    {
+      "home_team": "1. FC Heidenheim 1846",
+      "away_team": "1. FC K\u00f6ln",
+      "odds": {
+        "home": 2.9575,
+        "draw": 3.6225,
+        "away": 2.3225
+      }
+    },
+    {
+      "home_team": "Bayer 04 Leverkusen",
+      "away_team": "VfB Stuttgart",
+      "odds": {
+        "home": 1.97,
+        "draw": 3.63,
+        "away": 3.4725
+      }
+    },
+    {
+      "home_team": "Borussia M\u00f6nchengladbach",
+      "away_team": "FC Augsburg",
+      "odds": {
+        "home": 1.75,
+        "draw": 2.96,
+        "away": 3.0700000000000003
+      }
+    },
+    {
+      "home_team": "FC Bayern M\u00fcnchen",
+      "away_team": "VfL Wolfsburg",
+      "odds": {
+        "home": 1.1549999999999998,
+        "draw": 6.930000000000001,
+        "away": 10.9425
       }
     }
   ]

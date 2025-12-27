@@ -503,13 +503,26 @@ BACKTEST_RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'backtest_result
 
 def save_backtest_results(current_results: Dict, benchmark: float = 1.65):
     """Save backtest results to JSON file for use by predictor."""
-    # Find best ensemble
+    # Separate model and ensemble results
+    model_results = {k: v for k, v in current_results.items() if not k.startswith('ens_')}
     ensemble_results = {k: v for k, v in current_results.items() if k.startswith('ens_')}
 
-    if not ensemble_results:
-        return
+    # Calculate model averages and find best
+    model_scores = {}
+    for name, r in model_results.items():
+        if r['n'] > 0:
+            avg = r['total'] / r['n']
+            model_scores[name] = {
+                'avg_points': avg,
+                'total_points': r['total'],
+                'matches': r['n'],
+                'exact': r['exact'],
+                'diff': r['diff'],
+                'tend': r['tend'],
+                'wrong': r['wrong'],
+            }
 
-    # Calculate averages and find best
+    # Calculate ensemble averages and find best
     ensemble_scores = {}
     for name, r in ensemble_results.items():
         if r['n'] > 0:
@@ -524,11 +537,19 @@ def save_backtest_results(current_results: Dict, benchmark: float = 1.65):
                 'wrong': r['wrong'],
             }
 
-    if not ensemble_scores:
-        return
+    # Find best model
+    best_model = None
+    best_model_score = 0
+    if model_scores:
+        best_model = max(model_scores.keys(), key=lambda k: model_scores[k]['avg_points'])
+        best_model_score = model_scores[best_model]['avg_points']
 
-    best_ensemble = max(ensemble_scores.keys(), key=lambda k: ensemble_scores[k]['avg_points'])
-    best_score = ensemble_scores[best_ensemble]['avg_points']
+    # Find best ensemble
+    best_ensemble = None
+    best_ensemble_score = 0
+    if ensemble_scores:
+        best_ensemble = max(ensemble_scores.keys(), key=lambda k: ensemble_scores[k]['avg_points'])
+        best_ensemble_score = ensemble_scores[best_ensemble]['avg_points']
 
     # Map ensemble key to class name
     ensemble_class_map = {
@@ -550,12 +571,20 @@ def save_backtest_results(current_results: Dict, benchmark: float = 1.65):
     results_data = {
         'updated_at': datetime.now().isoformat(),
         'benchmark': benchmark,
+        'best_model': {
+            'key': best_model,
+            'display_name': EXTENDED_MODEL_NAMES.get(best_model, best_model) if best_model else None,
+            'avg_points': best_model_score,
+            'beats_benchmark': best_model_score >= benchmark,
+        } if best_model else None,
         'best_ensemble': {
             'key': best_ensemble,
             'class_name': ensemble_class_map.get(best_ensemble, 'HybridEnsembleV2'),
-            'avg_points': best_score,
-            'beats_benchmark': best_score >= benchmark,
-        },
+            'display_name': best_ensemble.replace('ens_', '').replace('_', ' ').title() if best_ensemble else None,
+            'avg_points': best_ensemble_score,
+            'beats_benchmark': best_ensemble_score >= benchmark,
+        } if best_ensemble else None,
+        'all_models': model_scores,
         'all_ensembles': ensemble_scores,
     }
 
@@ -563,7 +592,10 @@ def save_backtest_results(current_results: Dict, benchmark: float = 1.65):
         json.dump(results_data, f, indent=2)
 
     print(f"\nBacktest results saved to {os.path.basename(BACKTEST_RESULTS_FILE)}")
-    print(f"Best ensemble: {best_ensemble.replace('ens_', '').replace('_', ' ').title()} ({best_score:.2f} pts/match)")
+    if best_model:
+        print(f"Best model: {EXTENDED_MODEL_NAMES.get(best_model, best_model)} ({best_model_score:.2f} pts/match)")
+    if best_ensemble:
+        print(f"Best ensemble: {best_ensemble.replace('ens_', '').replace('_', ' ').title()} ({best_ensemble_score:.2f} pts/match)")
 
 
 def print_summary(current_results: Dict, rolling_results: Dict, benchmark: float = 1.65):

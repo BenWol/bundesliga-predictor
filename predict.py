@@ -90,22 +90,55 @@ def main():
 
         # Always save predictions to standard location
         if predictions:
+            # Get best model key from predictor
+            best_model_key = predictor._best_model_key
+            best_model_name = predictor._best_model_name
+            best_model_score = predictor._best_model_score
+            best_ensemble_name = predictor._ensemble_display_name
+            best_ensemble_score = predictor._ensemble_score
+
             save_data = {
                 'generated_at': datetime.now().isoformat(),
                 'matchday': predictions[0].get('matchday', '?'),
-                'predictions': [
+                'best_model': {
+                    'name': best_model_name,
+                    'avg_points': best_model_score,
+                    'predictions': [
+                        {
+                            'home_team': p['home_team'],
+                            'away_team': p['away_team'],
+                            'date': p['date'],
+                            'home_score': p['predictions'][best_model_key]['home'],
+                            'away_score': p['predictions'][best_model_key]['away'],
+                            'scoreline': p['predictions'][best_model_key]['scoreline'],
+                        }
+                        for p in predictions
+                    ]
+                },
+                'best_ensemble': {
+                    'name': best_ensemble_name,
+                    'avg_points': best_ensemble_score,
+                    'predictions': [
+                        {
+                            'home_team': p['home_team'],
+                            'away_team': p['away_team'],
+                            'date': p['date'],
+                            'home_score': p['ensemble']['home'],
+                            'away_score': p['ensemble']['away'],
+                            'scoreline': p['ensemble']['scoreline'],
+                            'strategy': p['ensemble']['strategy'],
+                        }
+                        for p in predictions
+                    ]
+                },
+                'odds': [
                     {
                         'home_team': p['home_team'],
                         'away_team': p['away_team'],
-                        'date': p['date'],
-                        'home_score': p['ensemble']['home'],
-                        'away_score': p['ensemble']['away'],
-                        'scoreline': p['ensemble']['scoreline'],
-                        'strategy': p['ensemble']['strategy'],
                         'odds': p['odds'],
                     }
                     for p in predictions
-                ]
+                ],
             }
             with open(PREDICTIONS_FILE, 'w') as f:
                 json.dump(save_data, f, indent=2)

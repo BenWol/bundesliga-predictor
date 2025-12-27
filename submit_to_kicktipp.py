@@ -5,9 +5,11 @@ Submit predictions to Kicktipp.de.
 This script reads the latest predictions from predict.py and submits them.
 
 Usage:
-    uv run python submit_to_kicktipp.py           # Submit predictions
-    uv run python submit_to_kicktipp.py --dry-run # Show what would be submitted
-    uv run python submit_to_kicktipp.py --no-overwrite  # Don't overwrite existing tips
+    uv run python submit_to_kicktipp.py                    # Submit best ensemble (default)
+    uv run python submit_to_kicktipp.py --use-model        # Submit best model predictions
+    uv run python submit_to_kicktipp.py --use-ensemble     # Submit best ensemble predictions (explicit)
+    uv run python submit_to_kicktipp.py --dry-run          # Show what would be submitted
+    uv run python submit_to_kicktipp.py --no-overwrite     # Don't overwrite existing tips
 
 Prerequisites:
     1. Run 'python predict.py' first to generate predictions
@@ -77,6 +79,19 @@ def main():
         help='Submit even if predictions are not from today'
     )
 
+    # Prediction source selection (mutually exclusive)
+    source_group = parser.add_mutually_exclusive_group()
+    source_group.add_argument(
+        '--use-model',
+        action='store_true',
+        help='Use best model predictions instead of ensemble'
+    )
+    source_group.add_argument(
+        '--use-ensemble',
+        action='store_true',
+        help='Use best ensemble predictions (default)'
+    )
+
     args = parser.parse_args()
 
     # Load predictions
@@ -96,12 +111,35 @@ def main():
         with open(PREDICTIONS_FILE, 'r') as f:
             data = json.load(f)
 
-    predictions = data['predictions']
     matchday = data.get('matchday', '?')
     generated_at = data['generated_at']
 
+    # Determine which predictions to use
+    use_model = args.use_model
+
+    # Check for new format (best_model/best_ensemble) vs old format (predictions)
+    if 'best_model' in data and 'best_ensemble' in data:
+        # New format
+        if use_model:
+            source = data['best_model']
+            source_type = 'model'
+        else:
+            source = data['best_ensemble']
+            source_type = 'ensemble'
+
+        source_name = source['name']
+        source_score = source.get('avg_points')
+        predictions = source['predictions']
+    else:
+        # Old format (backwards compatibility)
+        predictions = data['predictions']
+        source_name = 'Ensemble'
+        source_score = None
+        source_type = 'ensemble'
+
     print(f"\nPredictions for Matchday {matchday}")
     print(f"Generated: {generated_at}")
+    print(f"Source: {source_name}" + (f" ({source_score:.2f} pts/match)" if source_score else ""))
     print("-" * 40)
 
     for pred in predictions:
@@ -127,13 +165,15 @@ def main():
             {
                 'home_team': p['home_team'],
                 'away_team': p['away_team'],
-                'ensemble': {
+                'ensemble': {  # kicktipp client expects 'ensemble' key
                     'home': p['home_score'],
                     'away': p['away_score'],
                 }
             }
             for p in predictions
         ]
+
+        print(f"\nUsing: {source_name} ({source_type})")
 
         results = client.submit_from_predictor_results(
             pred_for_kicktipp,

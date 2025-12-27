@@ -1,129 +1,219 @@
 {
-  "updated_at": "2025-11-26T09:28:51.688807",
+  "updated_at": "2025-12-27T17:42:42.506452",
   "benchmark": 1.65,
-  "best_ensemble": {
-    "key": "ens_ultimate_tendency",
-    "class_name": "UltimateTendencyEnsemble",
-    "avg_points": 1.5555555555555556,
+  "best_model": {
+    "key": "bivariate_poisson",
+    "display_name": "Bivariate Poisson",
+    "avg_points": 1.4296296296296296,
     "beats_benchmark": false
+  },
+  "best_ensemble": {
+    "key": "ens_hybrid_v2",
+    "class_name": "HybridEnsembleV2",
+    "display_name": "Hybrid V2",
+    "avg_points": 1.3703703703703705,
+    "beats_benchmark": false
+  },
+  "all_models": {
+    "model1": {
+      "avg_points": 1.1111111111111112,
+      "total_points": 150,
+      "matches": 135,
+      "exact": 5,
+      "diff": 24,
+      "tend": 29,
+      "wrong": 77
+    },
+    "model2": {
+      "avg_points": 1.2,
+      "total_points": 162,
+      "matches": 135,
+      "exact": 12,
+      "diff": 14,
+      "tend": 36,
+      "wrong": 73
+    },
+    "model3": {
+      "avg_points": 1.3037037037037038,
+      "total_points": 176,
+      "matches": 135,
+      "exact": 15,
+      "diff": 16,
+      "tend": 34,
+      "wrong": 70
+    },
+    "model4": {
+      "avg_points": 1.3703703703703705,
+      "total_points": 185,
+      "matches": 135,
+      "exact": 11,
+      "diff": 17,
+      "tend": 45,
+      "wrong": 62
+    },
+    "gradient_boosting": {
+      "avg_points": 1.0592592592592593,
+      "total_points": 143,
+      "matches": 135,
+      "exact": 7,
+      "diff": 17,
+      "tend": 32,
+      "wrong": 79
+    },
+    "bivariate_poisson": {
+      "avg_points": 1.4296296296296296,
+      "total_points": 193,
+      "matches": 135,
+      "exact": 20,
+      "diff": 17,
+      "tend": 31,
+      "wrong": 67
+    },
+    "smart_odds": {
+      "avg_points": 1.2592592592592593,
+      "total_points": 170,
+      "matches": 135,
+      "exact": 17,
+      "diff": 14,
+      "tend": 30,
+      "wrong": 74
+    },
+    "tendency_first": {
+      "avg_points": 1.0814814814814815,
+      "total_points": 146,
+      "matches": 135,
+      "exact": 4,
+      "diff": 22,
+      "tend": 32,
+      "wrong": 77
+    },
+    "probability_max": {
+      "avg_points": 1.3925925925925926,
+      "total_points": 188,
+      "matches": 135,
+      "exact": 15,
+      "diff": 16,
+      "tend": 40,
+      "wrong": 64
+    }
   },
   "all_ensembles": {
     "ens_consensus": {
-      "avg_points": 1.4242424242424243,
-      "total_points": 141,
-      "matches": 99,
-      "exact": 7,
+      "avg_points": 1.3111111111111111,
+      "total_points": 177,
+      "matches": 135,
+      "exact": 10,
       "diff": 17,
-      "tend": 31,
-      "wrong": 44
+      "tend": 43,
+      "wrong": 65
     },
     "ens_simple_tendency": {
-      "avg_points": 1.4646464646464648,
-      "total_points": 145,
-      "matches": 99,
-      "exact": 8,
-      "diff": 17,
-      "tend": 31,
-      "wrong": 43
+      "avg_points": 1.362962962962963,
+      "total_points": 184,
+      "matches": 135,
+      "exact": 11,
+      "diff": 18,
+      "tend": 43,
+      "wrong": 63
     },
     "ens_tendency_expert": {
-      "avg_points": 1.5151515151515151,
-      "total_points": 150,
-      "matches": 99,
-      "exact": 8,
-      "diff": 18,
-      "tend": 32,
-      "wrong": 41
+      "avg_points": 1.3555555555555556,
+      "total_points": 183,
+      "matches": 135,
+      "exact": 10,
+      "diff": 19,
+      "tend": 43,
+      "wrong": 63
     },
     "ens_tendency_consensus": {
-      "avg_points": 1.4545454545454546,
-      "total_points": 144,
-      "matches": 99,
-      "exact": 8,
+      "avg_points": 1.288888888888889,
+      "total_points": 174,
+      "matches": 135,
+      "exact": 10,
       "diff": 16,
-      "tend": 32,
-      "wrong": 43
+      "tend": 43,
+      "wrong": 66
     },
     "ens_hybrid_v2": {
-      "avg_points": 1.4848484848484849,
-      "total_points": 147,
-      "matches": 99,
-      "exact": 9,
-      "diff": 15,
-      "tend": 33,
-      "wrong": 42
+      "avg_points": 1.3703703703703705,
+      "total_points": 185,
+      "matches": 135,
+      "exact": 11,
+      "diff": 17,
+      "tend": 45,
+      "wrong": 62
     },
     "ens_optimized_consensus": {
-      "avg_points": 1.4242424242424243,
-      "total_points": 141,
-      "matches": 99,
-      "exact": 7,
+      "avg_points": 1.3111111111111111,
+      "total_points": 177,
+      "matches": 135,
+      "exact": 10,
       "diff": 17,
-      "tend": 31,
-      "wrong": 44
+      "tend": 43,
+      "wrong": 65
     },
     "ens_hybrid": {
-      "avg_points": 1.4343434343434343,
-      "total_points": 142,
-      "matches": 99,
-      "exact": 7,
+      "avg_points": 1.348148148148148,
+      "total_points": 182,
+      "matches": 135,
+      "exact": 11,
       "diff": 18,
-      "tend": 30,
-      "wrong": 44
+      "tend": 42,
+      "wrong": 64
     },
     "ens_adaptive_scoreline": {
-      "avg_points": 1.4141414141414141,
-      "total_points": 140,
-      "matches": 99,
-      "exact": 5,
+      "avg_points": 1.2444444444444445,
+      "total_points": 168,
+      "matches": 135,
+      "exact": 8,
       "diff": 18,
-      "tend": 33,
-      "wrong": 43
+      "tend": 41,
+      "wrong": 68
     },
     "ens_bayesian_optimal": {
-      "avg_points": 1.292929292929293,
-      "total_points": 128,
-      "matches": 99,
-      "exact": 7,
-      "diff": 14,
-      "tend": 29,
-      "wrong": 49
+      "avg_points": 1.2518518518518518,
+      "total_points": 169,
+      "matches": 135,
+      "exact": 9,
+      "diff": 17,
+      "tend": 41,
+      "wrong": 68
     },
     "ens_aggressive_scoreline": {
-      "avg_points": 1.4343434343434343,
-      "total_points": 142,
-      "matches": 99,
-      "exact": 7,
+      "avg_points": 1.3037037037037038,
+      "total_points": 176,
+      "matches": 135,
+      "exact": 9,
       "diff": 18,
-      "tend": 30,
-      "wrong": 44
+      "tend": 43,
+      "wrong": 65
     },
     "ens_ultimate_tendency": {
-      "avg_points": 1.5555555555555556,
-      "total_points": 154,
-      "matches": 99,
-      "exact": 11,
-      "diff": 16,
-      "tend": 31,
-      "wrong": 41
+      "avg_points": 1.288888888888889,
+      "total_points": 174,
+      "matches": 135,
+      "exact": 10,
+      "diff": 18,
+      "tend": 40,
+      "wrong": 67
     },
     "ens_super_consensus": {
-      "avg_points": 1.4242424242424243,
-      "total_points": 141,
-      "matches": 99,
-      "exact": 7,
-      "diff": 17,
-      "tend": 31,
-      "wrong": 44
+      "avg_points": 1.2296296296296296,
+      "total_points": 166,
+      "matches": 135,
+      "exact": 8,
+      "diff": 16,
+      "tend": 43,
+      "wrong": 68
     },
     "ens_max_points": {
-      "avg_points": 1.4242424242424243,
-      "total_points": 141,
-      "matches": 99,
-      "exact": 6,
+      "avg_points": 1.325925925925926,
+      "total_points": 179,
+      "matches": 135,
+      "exact": 10,
       "diff": 19,
-      "tend": 30,
-      "wrong": 44
+      "tend": 41,
+      "wrong": 65
     }
   }
 }
