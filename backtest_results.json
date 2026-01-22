@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-01-22T22:17:15.983122",
+  "updated_at": "2026-01-22T22:47:01.590095",
   "benchmark": 1.65,
   "best_model": {
     "key": "bivariate_poisson",

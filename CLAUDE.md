@@ -25,52 +25,33 @@ This is a Bundesliga football match prediction system that uses machine learning
 uv pip install -r requirements.txt
 ```
 
-### First-time data fetch (required before predictions)
+### Full Pipeline (MAIN ENTRY POINT)
 ```bash
-uv run python fetch_data.py
+# Full pipeline: fetch -> backtest -> predict -> submit to Kicktipp
+uv run python main.py
+
+# Dry run (skip actual submission)
+uv run python main.py --dry-run
+
+# Skip data fetching (use cached data)
+uv run python main.py --skip-fetch
+
+# Skip backtesting (use cached results)
+uv run python main.py --skip-backtest
+
+# Verbose mode (detailed output instead of progress bars)
+uv run python main.py --verbose
 ```
 
-### Weekly Predictions (MAIN ENTRY POINT)
-```bash
-# Get predictions for next matchday
-uv run python predict.py
-
-# Quick mode (minimal output)
-uv run python predict.py --quick
-
-# JSON output
-uv run python predict.py --json
-
-# Save predictions to file
-uv run python predict.py --save predictions.json
-```
-
-### Backtesting
-```bash
-# Full backtest (current season walk-forward + rolling validation)
-uv run python backtest.py
-
-# Quick backtest (current season only, walk-forward)
-uv run python backtest.py --quick
-
-# Test only ensembles
-uv run python backtest.py --ensembles-only
-
-# Test only models
-uv run python backtest.py --models-only
-
-# Change number of training seasons (default: 2)
-uv run python backtest.py --training-seasons 3
-
-# Use static training (train once at season start, not walk-forward)
-uv run python backtest.py --static
-
-# Custom benchmark
-uv run python backtest.py --benchmark 1.65
-```
+The pipeline:
+1. Fetches latest data (matches + odds)
+2. Runs walk-forward backtest to find best model/ensemble
+3. Generates predictions using the best performer
+4. Shows results table and predictions
+5. Waits for confirmation, then submits to Kicktipp
 
 **Walk-Forward Methodology:**
-The backtest uses walk-forward validation:
+The backtest uses walk-forward validation with parallel execution:
 1. Train on last N seasons before matchday 1
 2. Predict matchday 1, then add results to training data
 3. Retrain and predict matchday 2
@@ -83,18 +64,24 @@ Create a `.env` file:
 ```
 FOOTBALL_API_KEY=your_key_here
 ODDS_API_KEY=your_odds_api_key_here
+KICKTIPP_EMAIL=your_email
+KICKTIPP_PASSWORD=your_password
+KICKTIPP_COMMUNITY=your_community_name
 ```
 
 ## Project Structure
 
 ```
+main.py                            # Single entry point: fetch -> backtest -> predict -> submit
 bundesliga_predictor/              # Main package (OOP structure)
 ├── __init__.py                   # Package exports
+├── pipeline.py                   # Pipeline functions (fetch, backtest, predict, submit)
 ├── config.py                     # Configuration settings
 ├── data.py                       # Data loading and management
 ├── features.py                   # Feature engineering (39 features)
 ├── features_v2.py                # Extended features (49 features with context)
 ├── scoring.py                    # Kicktipp scoring system
+├── kicktipp.py                   # Kicktipp client for submitting predictions
 ├── ensemble.py                   # Original consensus ensemble
 ├── ensemble_v2.py                # Validated v2 ensembles
 ├── predictor.py                  # Main predictor class
@@ -115,10 +102,6 @@ bundesliga_predictor/              # Main package (OOP structure)
         ├── smart_odds.py         # Smart Odds
         ├── tendency_first.py     # Tendency-First model
         └── probability_max.py    # Probability-Maximizing model
-
-predict.py                        # Main entry point script
-fetch_data.py                     # Data fetching utility
-backtest.py                       # Comprehensive backtesting
 ```
 
 ## Architecture
@@ -166,7 +149,24 @@ backtest.py                       # Comprehensive backtesting
 
 ## Usage Examples
 
-### Python API
+### Pipeline API
+```python
+from bundesliga_predictor import fetch_data, run_backtest, run_predict, submit_kicktipp
+
+# Fetch latest data
+fetch_data()
+
+# Run walk-forward backtest (parallel)
+results = run_backtest()
+
+# Generate predictions
+predictions = run_predict()
+
+# Submit to Kicktipp (use_model=False means use best ensemble)
+submit_kicktipp(predictions, use_model=False, dry_run=True)
+```
+
+### Predictor API
 ```python
 from bundesliga_predictor import BundesligaPredictor
 
@@ -212,7 +212,7 @@ prediction, strategy, details = ensemble.combine(
 - `latest_predictions.json` - Most recent predictions
 
 **Data Flow:**
-1. `fetch_data.py` downloads data from football-data.org API and football-data.co.uk CSV
+1. `fetch_data()` downloads data from football-data.org API and football-data.co.uk CSV
 2. The CSV is the primary source (has more historical data with odds already included)
 3. For predictions, fixtures come from football-data.org API, odds from The Odds API
 
