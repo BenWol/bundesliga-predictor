@@ -63,11 +63,9 @@ def fetch_data(verbose=False):
     now = datetime.now()
     current_season = now.year if now.month >= 8 else now.year - 1
 
-    steps = ['matches', 'hist_odds', 'curr_odds', 'save']
-    pbar = tqdm(steps, desc="Fetch", ncols=60, disable=verbose)
+    pbar = tqdm(total=4, desc="Fetch", ncols=60, disable=verbose)
 
     # Fetch matches from football-data.org
-    pbar.set_description("Matches")
     headers = {'X-Auth-Token': football_api_key} if football_api_key != 'DEMO' else {}
     matches = []
     for i in range(7, -1, -1):
@@ -82,7 +80,6 @@ def fetch_data(verbose=False):
     pbar.update(1)
 
     # Fetch historical odds from football-data.co.uk
-    pbar.set_description("Hist odds")
     odds_dfs = []
     for i in range(7, -1, -1):
         s = current_season - i
@@ -98,7 +95,6 @@ def fetch_data(verbose=False):
     pbar.update(1)
 
     # Fetch current odds from the-odds-api.com
-    pbar.set_description("Curr odds")
     curr_odds = None
     if odds_api_key:
         try:
@@ -115,7 +111,6 @@ def fetch_data(verbose=False):
     pbar.update(1)
 
     # Save data
-    pbar.set_description("Save")
     if matches:
         with open('bundesliga_matches.json', 'w') as f:
             json.dump({'fetched_at': datetime.now().isoformat(), 'matches': matches}, f)
