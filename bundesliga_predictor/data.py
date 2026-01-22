@@ -279,9 +279,22 @@ class FixturesFetcher:
                 if md:
                     matchdays.setdefault(md, []).append(match)
 
-            # Return next matchday
+            # Return next matchday - prefer full matchdays over postponed games
             if matchdays:
-                next_md = min(matchdays.keys())
+                # Find matchdays with most games (full matchday = 9 games)
+                # If there are postponed games (< 9) from earlier matchdays,
+                # prefer the next full matchday instead
+                sorted_mds = sorted(matchdays.keys())
+
+                for md in sorted_mds:
+                    matches = matchdays[md]
+                    # If this matchday has 5+ games, it's likely the "real" next matchday
+                    # (not just a few postponed games)
+                    if len(matches) >= 5:
+                        return matches
+
+                # Fallback to earliest matchday if none have 5+ games
+                next_md = sorted_mds[0]
                 return matchdays[next_md]
 
             return []

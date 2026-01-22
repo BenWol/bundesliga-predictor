@@ -1,219 +1,131 @@
 {
-  "updated_at": "2025-12-27T17:42:42.506452",
+  "updated_at": "2026-01-22T22:17:15.983122",
   "benchmark": 1.65,
   "best_model": {
     "key": "bivariate_poisson",
     "display_name": "Bivariate Poisson",
-    "avg_points": 1.4296296296296296,
+    "avg_points": 1.421383647798742,
     "beats_benchmark": false
   },
   "best_ensemble": {
-    "key": "ens_hybrid_v2",
-    "class_name": "HybridEnsembleV2",
-    "display_name": "Hybrid V2",
-    "avg_points": 1.3703703703703705,
+    "key": "ens_tendency_consensus",
+    "class_name": "TendencyConsensusEnsemble",
+    "display_name": "Tendency Consensus",
+    "avg_points": 1.5031446540880504,
     "beats_benchmark": false
   },
   "all_models": {
     "model1": {
-      "avg_points": 1.1111111111111112,
-      "total_points": 150,
-      "matches": 135,
-      "exact": 5,
-      "diff": 24,
-      "tend": 29,
-      "wrong": 77
+      "avg_points": 1.20125786163522,
+      "total_points": 191,
+      "matches": 159
     },
     "model2": {
-      "avg_points": 1.2,
-      "total_points": 162,
-      "matches": 135,
-      "exact": 12,
-      "diff": 14,
-      "tend": 36,
-      "wrong": 73
+      "avg_points": 1.2767295597484276,
+      "total_points": 203,
+      "matches": 159
     },
     "model3": {
-      "avg_points": 1.3037037037037038,
-      "total_points": 176,
-      "matches": 135,
-      "exact": 15,
-      "diff": 16,
-      "tend": 34,
-      "wrong": 70
+      "avg_points": 1.2641509433962264,
+      "total_points": 201,
+      "matches": 159
     },
     "model4": {
-      "avg_points": 1.3703703703703705,
-      "total_points": 185,
-      "matches": 135,
-      "exact": 11,
-      "diff": 17,
-      "tend": 45,
-      "wrong": 62
+      "avg_points": 1.4088050314465408,
+      "total_points": 224,
+      "matches": 159
     },
     "gradient_boosting": {
-      "avg_points": 1.0592592592592593,
-      "total_points": 143,
-      "matches": 135,
-      "exact": 7,
-      "diff": 17,
-      "tend": 32,
-      "wrong": 79
+      "avg_points": 1.1132075471698113,
+      "total_points": 177,
+      "matches": 159
     },
     "bivariate_poisson": {
-      "avg_points": 1.4296296296296296,
-      "total_points": 193,
-      "matches": 135,
-      "exact": 20,
-      "diff": 17,
-      "tend": 31,
-      "wrong": 67
+      "avg_points": 1.421383647798742,
+      "total_points": 226,
+      "matches": 159
     },
     "smart_odds": {
-      "avg_points": 1.2592592592592593,
-      "total_points": 170,
-      "matches": 135,
-      "exact": 17,
-      "diff": 14,
-      "tend": 30,
-      "wrong": 74
+      "avg_points": 1.3459119496855345,
+      "total_points": 214,
+      "matches": 159
     },
     "tendency_first": {
-      "avg_points": 1.0814814814814815,
-      "total_points": 146,
-      "matches": 135,
-      "exact": 4,
-      "diff": 22,
-      "tend": 32,
-      "wrong": 77
+      "avg_points": 1.1635220125786163,
+      "total_points": 185,
+      "matches": 159
     },
     "probability_max": {
-      "avg_points": 1.3925925925925926,
-      "total_points": 188,
-      "matches": 135,
-      "exact": 15,
-      "diff": 16,
-      "tend": 40,
-      "wrong": 64
+      "avg_points": 1.371069182389937,
+      "total_points": 218,
+      "matches": 159
     }
   },
   "all_ensembles": {
     "ens_consensus": {
-      "avg_points": 1.3111111111111111,
-      "total_points": 177,
-      "matches": 135,
-      "exact": 10,
-      "diff": 17,
-      "tend": 43,
-      "wrong": 65
+      "avg_points": 1.4339622641509433,
+      "total_points": 228,
+      "matches": 159
     },
     "ens_simple_tendency": {
-      "avg_points": 1.362962962962963,
-      "total_points": 184,
-      "matches": 135,
-      "exact": 11,
-      "diff": 18,
-      "tend": 43,
-      "wrong": 63
+      "avg_points": 1.4591194968553458,
+      "total_points": 232,
+      "matches": 159
     },
     "ens_tendency_expert": {
-      "avg_points": 1.3555555555555556,
-      "total_points": 183,
-      "matches": 135,
-      "exact": 10,
-      "diff": 19,
-      "tend": 43,
-      "wrong": 63
+      "avg_points": 1.4779874213836477,
+      "total_points": 235,
+      "matches": 159
     },
     "ens_tendency_consensus": {
-      "avg_points": 1.288888888888889,
-      "total_points": 174,
-      "matches": 135,
-      "exact": 10,
-      "diff": 16,
-      "tend": 43,
-      "wrong": 66
+      "avg_points": 1.5031446540880504,
+      "total_points": 239,
+      "matches": 159
     },
     "ens_hybrid_v2": {
-      "avg_points": 1.3703703703703705,
-      "total_points": 185,
-      "matches": 135,
-      "exact": 11,
-      "diff": 17,
-      "tend": 45,
-      "wrong": 62
+      "avg_points": 1.4088050314465408,
+      "total_points": 224,
+      "matches": 159
     },
     "ens_optimized_consensus": {
-      "avg_points": 1.3111111111111111,
-      "total_points": 177,
-      "matches": 135,
-      "exact": 10,
-      "diff": 17,
-      "tend": 43,
-      "wrong": 65
+      "avg_points": 1.4339622641509433,
+      "total_points": 228,
+      "matches": 159
     },
     "ens_hybrid": {
-      "avg_points": 1.348148148148148,
-      "total_points": 182,
-      "matches": 135,
-      "exact": 11,
-      "diff": 18,
-      "tend": 42,
-      "wrong": 64
+      "avg_points": 1.4339622641509433,
+      "total_points": 228,
+      "matches": 159
     },
     "ens_adaptive_scoreline": {
-      "avg_points": 1.2444444444444445,
-      "total_points": 168,
-      "matches": 135,
-      "exact": 8,
-      "diff": 18,
-      "tend": 41,
-      "wrong": 68
+      "avg_points": 1.3522012578616351,
+      "total_points": 215,
+      "matches": 159
     },
     "ens_bayesian_optimal": {
-      "avg_points": 1.2518518518518518,
-      "total_points": 169,
-      "matches": 135,
-      "exact": 9,
-      "diff": 17,
-      "tend": 41,
-      "wrong": 68
+      "avg_points": 1.2327044025157232,
+      "total_points": 196,
+      "matches": 159
     },
     "ens_aggressive_scoreline": {
-      "avg_points": 1.3037037037037038,
-      "total_points": 176,
-      "matches": 135,
-      "exact": 9,
-      "diff": 18,
-      "tend": 43,
-      "wrong": 65
+      "avg_points": 1.4339622641509433,
+      "total_points": 228,
+      "matches": 159
     },
     "ens_ultimate_tendency": {
-      "avg_points": 1.288888888888889,
-      "total_points": 174,
-      "matches": 135,
-      "exact": 10,
-      "diff": 18,
-      "tend": 40,
-      "wrong": 67
+      "avg_points": 1.2893081761006289,
+      "total_points": 205,
+      "matches": 159
     },
     "ens_super_consensus": {
-      "avg_points": 1.2296296296296296,
-      "total_points": 166,
-      "matches": 135,
-      "exact": 8,
-      "diff": 16,
-      "tend": 43,
-      "wrong": 68
+      "avg_points": 1.3144654088050314,
+      "total_points": 209,
+      "matches": 159
     },
     "ens_max_points": {
-      "avg_points": 1.325925925925926,
-      "total_points": 179,
-      "matches": 135,
-      "exact": 10,
-      "diff": 19,
-      "tend": 41,
-      "wrong": 65
+      "avg_points": 1.4465408805031446,
+      "total_points": 230,
+      "matches": 159
     }
   }
 }

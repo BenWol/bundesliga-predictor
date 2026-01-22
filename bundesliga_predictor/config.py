@@ -51,6 +51,11 @@ MODEL_NAMES = {
     'model2': 'Multi-Class Classification',
     'model3': 'Poisson Regression',
     'model4': 'Naive Odds-based',
+    'gradient_boosting': 'Gradient Boosting',
+    'bivariate_poisson': 'Bivariate Poisson',
+    'smart_odds': 'Smart Odds',
+    'tendency_first': 'Tendency First',
+    'probability_max': 'Probability Max',
 }
 
 # Default scorelines for naive model
