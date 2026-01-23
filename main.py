@@ -2,10 +2,25 @@
 """
 Unified Bundesliga Prediction Pipeline
 
+This script runs the full prediction pipeline: fetch data, backtest models,
+generate predictions, and submit to Kicktipp.
+
 Usage:
-    uv run python main.py              # Full pipeline
-    uv run python main.py --dry-run    # Skip submission
-    uv run python main.py --verbose    # Show detailed output
+    uv run python main.py [OPTIONS]
+
+Options:
+    --help, -h          Show this help message and exit
+    --dry-run           Skip actual Kicktipp submission (preview mode)
+    --verbose, -v       Show detailed output instead of progress bars
+    --skip-fetch        Skip data fetching (use cached data)
+    --skip-backtest     Skip backtesting (use cached backtest results)
+
+Examples:
+    uv run python main.py                           # Full pipeline
+    uv run python main.py --dry-run                 # Preview without submitting
+    uv run python main.py --skip-fetch --dry-run    # Quick test with cached data
+    uv run python main.py -v                        # Verbose output
+    uv run python main.py --skip-backtest           # Skip backtest, use cached results
 """
 
 import argparse
